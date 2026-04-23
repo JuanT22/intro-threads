@@ -1,20 +1,25 @@
 package ec.edu.utpl.carreras.computacion.proava;
 
-/**
- * Hello world!
- */
-public class MultiTimerConsole {
-    public static void main(String[] args) {
-        TimerTask timerA = new TimerTask("Temporizador A", 8);
-        TimerTask timerB = new TimerTask("Temporizador B", 5);
-        TimerTask timerC = new TimerTask("Temporizador C", 3);
+public static void main(String[] args) {
+    TimerTask timerA = new TimerTask("Temporizador A", 8);
+    TimerTask timerB = new TimerTask("Temporizador B", 5);
+    TimerTask timerC = new TimerTask("Temporizador C", 3);
 
-        // Lambda: implementa Runnable en línea
-        new Thread(() -> timerA.run(), "Hilo-A").start();
-        new Thread(() -> timerB.run(), "Hilo-B").start();
-        new Thread(() -> timerC.run(), "Hilo-C").start();
+    Thread hiloA = new Thread(() -> timerA.run(), "Hilo-A");
+    Thread hiloB = new Thread(() -> timerB.run(), "Hilo-B");
+    Thread hiloC = new Thread(() -> timerC.run(), "Hilo-C");
 
-        // Ejercicio adicional con referencia de método (equivalente):
-        // new Thread(timerA::run, "Hilo-A").start();
+    hiloA.start();
+    hiloB.start();
+    hiloC.start();
+
+    try {
+        hiloA.join(); // espera a que Hilo-A termine
+        hiloB.join(); // espera a que Hilo-B termine
+        hiloC.join(); // espera a que Hilo-C termine
+    } catch (InterruptedException e) {
+        Thread.currentThread().interrupt();
     }
+
+    System.out.println(">>> Todos los temporizadores han finalizado.");
 }
